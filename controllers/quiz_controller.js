@@ -50,9 +50,31 @@ exports.create = function(req, res) {
     });
 };
 
+// PUT /quizes/:id
+exports.update = function(req, res) {
+  req.quiz.pregunta = req.body.quiz.pregunta;
+  req.quiz.respuesta = req.body.quiz.respuesta;
+
+  req.quiz.validate().then(function(err){
+      if (err) {
+       res.render('quizes/edit', { quiz: req.quiz, errors: err.errors});   
+      } else {
+       req.quiz  // guarda en BD los campos pregunta y respuesta de Quiz
+       .save({fields: ["pregunta","respuesta"]})
+       .then(function(){res.redirect('/quizes')})
+      }
+    });
+};
+
 // GET /quizes/:id
 exports.show = function(req, res) {
      res.render('quizes/show', { quiz: req.quiz, errors: []});
+};
+
+// GET /quizes/:id/edit
+exports.edit = function(req, res) {
+    var quiz = req.quiz;
+    res.render('quizes/edit', { quiz: quiz, errors: []});
 };
 
 // GET /quizes/answer
