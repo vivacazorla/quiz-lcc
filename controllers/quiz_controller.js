@@ -20,17 +20,22 @@ exports.load = function(req, res, next, quizId) {
 
 // GET /quizes
 exports.index = function(req, res) {
-     var search = req.query.search?"%" + req.query.search.toLowerCase().replace(/ /g,'%') + "%":"%";
-     models.Quiz.findAll({where:["lower(pregunta) LIKE ?", search]}).then(function(quizes) {
+     var search = req.query.search?"%" + req.query.search.replace(/ /g,'%') + "%":"%";
+     var vtema = req.query.tema?req.query.tema:"%";
+
+     models.Quiz.findAll({where: { pregunta: { $like: search },
+                                   tema: { $like: vtema } } }).then(function(quizes) {
      res.render('quizes/index.ejs', { quizes: quizes, errors: []});
+   //models.Quiz.findAll({where:["lower(pregunta) LIKE ?", search]}).then(function(quizes) {
+   //res.render('quizes/index.ejs', { quizes: quizes, errors: []});
    }
-  ).catch(function(error) { next(error);});
+  ).catch(function(error){next(error);});
 };
 
 // GET /quizes/new
 exports.new = function(req, res) {
   var quiz = models.Quiz.build( //crea Objeto Quiz
-    { pregunta: "Pregunta", respuesta: "Respuesta"}
+    { pregunta: "", respuesta: "", tema: ""}
     );
     res.render('quizes/new', { quiz: quiz, errors: []});
 };
@@ -43,8 +48,8 @@ exports.create = function(req, res) {
       if (err) {
        res.render('quizes/new', { quiz: quiz, errors: err.errors});   
       } else {
-       quiz  // guarda en BD los campos pregunta y respuesta de Quiz
-       .save({fields: ["pregunta","respuesta"]})
+       quiz  // guarda en BD los campos pregunta, tema y respuesta de Quiz
+       .save({fields: ["pregunta","tema","respuesta"]})
        .then(function(){res.redirect('/quizes')})
       }
     });
@@ -54,13 +59,14 @@ exports.create = function(req, res) {
 exports.update = function(req, res) {
   req.quiz.pregunta = req.body.quiz.pregunta;
   req.quiz.respuesta = req.body.quiz.respuesta;
+  req.quiz.tema = req.body.quiz.tema;
 
   req.quiz.validate().then(function(err){
       if (err) {
        res.render('quizes/edit', { quiz: req.quiz, errors: err.errors});   
       } else {
        req.quiz  // guarda en BD los campos pregunta y respuesta de Quiz
-       .save({fields: ["pregunta","respuesta"]})
+       .save({fields: ["pregunta","respuesta","tema"]})
        .then(function(){res.redirect('/quizes')})
       }
     });

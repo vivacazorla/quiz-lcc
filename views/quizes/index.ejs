@@ -1,12 +1,17 @@
 <form method="get" action="/quizes">
-   Texto a buscar
-   <input type="text" name="search" value=""/>
+   Texto a buscar <input type="text" name="search" value=""/>
+   Tema:
+   <select id="tema" name="tema">
+     <option value="" selected></option>
+     <% include _optionTema.ejs %>
+   </select>
    <input type="submit" value="Enviar"/>
 </form>
 
 <table>
  	<% var i; for (i=0; i < quizes.length; i++ ) { %>
- <tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %> </a></td>
+ <tr><td><a href="quizes?tema=<%= quizes[i].tema %>"><%= quizes[i].tema %> </a></td>
+     <td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %> </a></td>
      <td><a href="quizes/<%= quizes[i].id %>/edit"><button>editar</button></a></td>
      <td><form method="post" action="quizes/<%= quizes[i].id %>?_method=delete">
          <button type="submit" onClick="return confirm('Desea borrar la pregunta:\n <%= quizes[i].pregunta %>?');">borrar
