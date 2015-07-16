@@ -2,7 +2,10 @@ var models = require('../models/models.js');
 
 // Autoload
 exports.load = function(req, res, next, quizId) {
-   models.Quiz.findById(quizId).then(function(quiz) {
+   models.Quiz.find({
+         where: { id: Number(quizId) },
+         include: [{ model: models.Comment }]
+   }).then(function(quiz) {
      if (quiz) {
         req.quiz = quiz;
         next();
@@ -24,7 +27,8 @@ exports.index = function(req, res) {
      var vtema = req.query.tema?req.query.tema:"%";
 
      models.Quiz.findAll({where: { pregunta: { $like: search },
-                                   tema: { $like: vtema } } }).then(function(quizes) {
+                                   tema: { $like: vtema } }, 
+                          order: 'tema, pregunta ASC' }).then(function(quizes) {
      res.render('quizes/index.ejs', { quizes: quizes, errors: []});
    //models.Quiz.findAll({where:["lower(pregunta) LIKE ?", search]}).then(function(quizes) {
    //res.render('quizes/index.ejs', { quizes: quizes, errors: []});
