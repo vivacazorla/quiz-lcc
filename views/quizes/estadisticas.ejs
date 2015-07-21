@@ -1,0 +1,10 @@
+<% var nComen=0; var i; 
+   for (i=0; i < quizes.length; i++ ) { 
+      nComen += quizes[i].Comments.length;
+   }  var mediaComen = nComen/quizes.length %>   
+<table>
+  <tr><td>Numero total de Preguntas:</td>          <td><%= quizes.length %></td> </tr>
+  <tr><td>Numero total de Comentarios:</td>        <td><%= nComen %></td> </tr>
+  <tr><td>Media de Comentarios por pregunta:</td>  <td><%= mediaComen %></td> </tr>
+  
+</table>

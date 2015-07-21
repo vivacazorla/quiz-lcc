@@ -81,6 +81,14 @@ exports.show = function(req, res) {
      res.render('quizes/show', { quiz: req.quiz, errors: []});
 };
 
+// GET /quizes/statistics
+exports.statistics = function(req, res) {
+     models.Quiz.findAll({include: [{ model: models.Comment }]}).then(function(quizes) {
+     res.render('quizes/statistics.ejs', { quizes: quizes, errors: []});
+   }
+  ).catch(function(error){next(error);});
+};
+
 // GET /quizes/:id/edit
 exports.edit = function(req, res) {
     var quiz = req.quiz;

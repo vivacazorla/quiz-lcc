@@ -1,0 +1,14 @@
+<% var nComen=0, nQuizSin = 0; var i; 
+   for (i=0; i < quizes.length; i++ ) { 
+      nComen += quizes[i].Comments.length;
+      nQuizSin += quizes[i].Comments.length?1:0;
+   }  var mediaComen = nComen/quizes.length; 
+      var nQuizCon = quizes.length - nQuizSin;
+   %>   
+<table>
+  <tr><td>Número total de Preguntas:</td>          <td><%= quizes.length %></td> </tr>
+  <tr><td>Número total de Comentarios:</td>        <td><%= nComen %></td> </tr>
+  <tr><td>Media de Comentarios por pregunta:</td>  <td><%= mediaComen %></td> </tr>
+  <tr><td>Número de preguntas sin comentarios:</td>  <td><%= nQuizSin %></td> </tr>
+  <tr><td>Número de preguntas con comentarios:</td>  <td><%= nQuizCon %></td> </tr>  
+</table>

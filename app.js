@@ -36,6 +36,17 @@ app.use(function(req, res, next) {
     req.session.redir = req.path;
   }
   res.locals.session = req.session;
+  // control del tiempo sin refrescar página
+  if (req.session.timer) {
+    var d1 = new Date().getTime();
+    //console.log(req.session.timer);
+    if ( d1 - req.session.timer > 120000 ) { 
+      delete req.session.timer;
+      res.redirect("/logout");
+    } else { 
+      req.session.timer = d1;
+    }
+  };
   next();
 });
 
