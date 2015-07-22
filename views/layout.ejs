@@ -16,7 +16,7 @@
   
     <header class="main" id="h1">  
       <% if (!session.user) { %>
-         <span class="right"><a href="/login">Login</a></span>
+         <span class="right"><a href="/users/new">Registro</a>  <a href="/login">Login</a></span>
       <% } else { %>   
          <span class="right"> <%= session.user.username %> <a href="/logout">Logout</a></span>
       <% } %>
@@ -29,7 +29,7 @@
       <span><a href="/quizes">Preguntas</a></span>
       <span><a href="/author">Créditos</a></span>
       <span><a href="/quizes/statistics">Estadisticas</a></span>     
-
+      <span><a href="/users/statistics">Usuarios</a></span>     
     </nav>
 
     <section class="main" id="s1">

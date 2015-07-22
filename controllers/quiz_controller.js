@@ -46,14 +46,18 @@ exports.new = function(req, res) {
 
 // POST /quizes/create
 exports.create = function(req, res) {
-  var quiz = models.Quiz.build( req.body.quiz );
+  var quiz = models.Quiz.build( 
+      { pregunta: req.body.quiz.pregunta,
+        respuesta: req.body.quiz.respuesta,
+        tema: req.body.quiz.tema,
+        UserId: req.session.user.id });
 
   quiz.validate().then(function(err){
       if (err) {
        res.render('quizes/new', { quiz: quiz, errors: err.errors});   
       } else {
        quiz  // guarda en BD los campos pregunta, tema y respuesta de Quiz
-       .save({fields: ["pregunta","tema","respuesta"]})
+       .save()
        .then(function(){res.redirect('/quizes')})
       }
     });
@@ -83,7 +87,9 @@ exports.show = function(req, res) {
 
 // GET /quizes/statistics
 exports.statistics = function(req, res) {
-     models.Quiz.findAll({include: [{ model: models.Comment }]}).then(function(quizes) {
+     models.Quiz.findAll({
+        include: [{ model: models.Comment },
+                  { model: models.Attempt }]}).then(function(quizes) {
      res.render('quizes/statistics.ejs', { quizes: quizes, errors: []});
    }
   ).catch(function(error){next(error);});
@@ -99,7 +105,16 @@ exports.edit = function(req, res) {
 exports.answer = function(req, res) {
    var resultado = 'Incorrecto';
    if (req.query.respuesta === req.quiz.respuesta){ resultado = 'Correcto'; }
-   res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: []});
+
+   var attempt = models.Attempt.build( 
+      { acierto: (req.query.respuesta === req.quiz.respuesta),
+        QuizId:  req.quiz.id,
+        UserId:  req.session.user?req.session.user.id:null });
+   attempt
+    .save()
+    .then(function(){
+       res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: []});
+     });
 };
 
 // DELETE /quizes/:id

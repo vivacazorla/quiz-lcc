@@ -1,0 +1,15 @@
+<h2>Registro de nuevo usuario</h2>
+
+<form method="post" action="/users/create">
+   <div class="field">
+     <label for="username">Nombre de Usuario:</label><br/>
+     <input type="text" id="username" name="user[username]" size="30" />
+   </div>
+   <div class="field">
+     <label for="password">Password:</label><br/>
+     <input type="password" id="password" name="user[password]" size="30" />
+   </div>
+   <div class="actions">
+     <input type="submit" name="commit" value="Registrar" />
+   </div>
+</form>
