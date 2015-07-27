@@ -2,9 +2,13 @@
 
 module.exports = function(sequelize, DataTypes) {
 	return sequelize.define('Attempt',
-	  { acierto:  { 
-	  	  type: DataTypes.BOOLEAN,
-	  	  defaultValue: false
-	  	}
+	  { aciertos:  { 
+	  	  type: DataTypes.INTEGER,
+	  	  defaultValue: 0
+	  	},
+	  	fallos:  { 
+	  	  type: DataTypes.INTEGER,
+	  	  defaultValue: 0
+	  	},
 	  });
 }

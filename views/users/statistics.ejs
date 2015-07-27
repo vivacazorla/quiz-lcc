@@ -1,25 +1,27 @@
-<table><tr>
-     <td>Usuario</td>
-     <td>Preguntas creadas</td>
-     <td>Comentarios creados</td>
-     <td>Respuestas</td>
-     <td>Aciertos</td>
-     <td>Fallos</td></tr>
-<% var nComen=0, nQuizes=0, nAttem=0, nAciertos=0, nFallos=0; var i,j;
+<table class="htable"><tr>
+     <th>Usuario</th>
+     <th>Preguntas<br>creadas</th>
+     <th>Comentarios<br>creados</th>
+     <th>Preguntas<br>respondidas</th>
+     <th>Preguntas<br>acertadas</th>
+     <th>Aciertos<br>totales</th>
+     <th>Fallos<br>totales</th>
+<% var nComen=0, nQuizes=0, nAttem=0, nQacer=0; nAciertos=0, nFallos=0; var i,j;
    for (i=0; i < users.length; i++ ) { 
       nComen = users[i].Comments?users[i].Comments.length:0;
       nQuizes = users[i].Quizes?users[i].Quizes.length:0;
       nAttem = users[i].Attempts?users[i].Attempts.length:0;
-      nAciertos =0; 
-      if (users[i].Attempts) {
-         for (j=0; j<users[i].Attempts.length; j++){ nAciertos +=users[i].Attempts[j].acierto?1:0 };
-      };
-      nFallos = nAttem - nAciertos;
+      nAciertos=0; nFallos=0; nQacer=0;
+      for (j=0; j < users[i].Attempts.length; j++ ) {
+        nQacer += (users[i].Attempts[j].aciertos?1:0);
+        nAciertos += users[i].Attempts[j].aciertos;
+        nFallos += users[i].Attempts[j].fallos; };
   %> <tr>
      <td><%= users[i].username %></td>
      <td><%= nQuizes %></td>
      <td><%= nComen %></td>
      <td><%= nAttem %></td>
+     <td><%= nQacer %></td>
      <td><%= nAciertos %></td>
      <td><%= nFallos %></td>
      </tr>

@@ -1,14 +1,15 @@
-<% var nComen=0, nAttem=0, nAciertos=0, nFallos=0, nQuizSin = 0; var i,j;
+<% var nComen=0, nAciertos=0, nFallos=0, nQuizCon = 0; var i,j;
    for (i=0; i < quizes.length; i++ ) { 
       nComen += quizes[i].Comments.length;
-      nAttem += quizes[i].Attempts.length;
-      nQuizSin += quizes[i].Comments.length?1:0;
-      for (j=0; j<quizes[i].Attempts.length; j++){ nAciertos +=quizes[i].Attempts[j].acierto };
+      nQuizCon += quizes[i].Comments.length?1:0;
+      for (j=0; j<quizes[i].Attempts.length; j++){ 
+         nAciertos +=quizes[i].Attempts[j]?quizes[i].Attempts[j].aciertos:0;
+         nFallos   +=quizes[i].Attempts[j]?quizes[i].Attempts[j].fallos:0 };
    }  var mediaComen = Math.round(nComen/quizes.length * 100)/100; 
-      var nQuizCon = quizes.length - nQuizSin;
-      var nFallos = nAttem - nAciertos;
+      var nQuizSin = quizes.length - nQuizCon;
+      var nAttem = nAciertos + nFallos;
    %>   
-<table>
+<table class="stable">
   <tr><td>Número total de Preguntas:</td>          <td><%= quizes.length %></td> </tr>
   <tr><td>Número total de Comentarios:</td>        <td><%= nComen %></td> </tr>
   <tr><td>Media de Comentarios por pregunta:</td>  <td><%= mediaComen %></td> </tr>

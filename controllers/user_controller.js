@@ -36,13 +36,16 @@ exports.create = function(req, res) {
           	 var err = new Error('Nombre de usuario ya existente. Elija otro');
              res.render('users/new', { user: user, errors: [err]  });  
           } else {
-           console.log(user);
+           usernew.score = 100;
            usernew  // guarda en BD los campos de User
-           .save({fields: ["username","password"]})
+           .save({fields: ["username","password","score"]})
            .then(function(){res.redirect('/quizes')})
           }});
       }
     });
+  req.session.timer = new Date().getTime();
+  req.session.user = {id:usernew.id, username:usernew.username};
+  res.redirect('/quizes');
 };
 
 // GET /users/statistics

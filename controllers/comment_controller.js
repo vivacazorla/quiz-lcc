@@ -24,7 +24,7 @@ exports.create = function(req, res) {
   var comment = models.Comment.build( 
       { texto:  req.body.comment.texto,
         QuizId: req.params.quizId,
-        UserId: req.session.user.id });
+        UserId: req.session.user?req.session.user.id:0 });
 
   comment.validate().then(function(err){
       if (err) {
@@ -33,7 +33,7 @@ exports.create = function(req, res) {
       } else {
        comment  // guarda en BD los campos pregunta, tema y respuesta de Quiz
        .save()
-       .then(function(){res.redirect('/quizes/'+req.params.quizId)})
+       .then(function(){res.redirect('/quizes/'+req.params.quizId)});
       }
     }).catch(function(error){next(error)});
 };

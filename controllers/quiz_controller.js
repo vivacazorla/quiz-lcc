@@ -26,12 +26,14 @@ exports.index = function(req, res) {
      var search = req.query.search?"%" + req.query.search.replace(/ /g,'%') + "%":"%";
      var vtema = req.query.tema?req.query.tema:"%";
 
-     models.Quiz.findAll({where: { pregunta: { $like: search },
-                                   tema: { $like: vtema } }, 
+     models.Quiz.findAll({include: [{ model: models.Attempt, where: { UserId: req.session.user?req.session.user.id:null }, required: false }],  
+                          where: { pregunta: { $like: search },
+                                   tema: { $like: vtema } },        
                           order: 'tema, pregunta ASC' }).then(function(quizes) {
      res.render('quizes/index.ejs', { quizes: quizes, errors: []});
    //models.Quiz.findAll({where:["lower(pregunta) LIKE ?", search]}).then(function(quizes) {
    //res.render('quizes/index.ejs', { quizes: quizes, errors: []});
+   // include: [{ model: models.Attempt, where: { UserId: req.session.user?req.session.user.id:null }, required: false }], 
    }
   ).catch(function(error){next(error);});
 };
@@ -58,7 +60,12 @@ exports.create = function(req, res) {
       } else {
        quiz  // guarda en BD los campos pregunta, tema y respuesta de Quiz
        .save()
-       .then(function(){res.redirect('/quizes')})
+       .then(function(){res.redirect('/quizes')});
+       sumapuntos(quiz.UserId, 10, function(error, user) {
+            if (error) {
+                req.session.errors = [{"message": 'Se ha producido un error: '+error}];
+                return;
+            }});
       }
     });
 };
@@ -104,17 +111,34 @@ exports.edit = function(req, res) {
 // GET /quizes/answer
 exports.answer = function(req, res) {
    var resultado = 'Incorrecto';
-   if (req.query.respuesta === req.quiz.respuesta){ resultado = 'Correcto'; }
+   var correcto = (req.query.respuesta === req.quiz.respuesta);
 
-   var attempt = models.Attempt.build( 
-      { acierto: (req.query.respuesta === req.quiz.respuesta),
-        QuizId:  req.quiz.id,
-        UserId:  req.session.user?req.session.user.id:null });
-   attempt
-    .save()
-    .then(function(){
+   if (correcto){ resultado = 'Correcto'; }
+
+   var maspuntos = (correcto)?5:-2;
+
+   models.Attempt.find({where: {QuizId : req.quiz.id,
+                                UserId : req.session.user?req.session.user.id:null }}).then(function(attempt) {
+    if (!attempt){
+      var attempt = models.Attempt.build( 
+        { aciertos: (correcto),
+          fallos:  !(correcto),
+          QuizId:  req.quiz.id,
+          UserId:  req.session.user?req.session.user.id:null });
+      attempt
+       .save()
+       .then(function(){
        res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: []});
-     });
+      });
+    } else {;
+       if (correcto) { maspuntos=(attempt.aciertos)?0:5; };
+       (correcto)?++attempt.aciertos:++attempt.fallos; 
+       attempt
+       .save()
+       .then(function(){
+       res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: []});});
+    };
+    }); 
 };
 
 // DELETE /quizes/:id

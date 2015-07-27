@@ -15,5 +15,42 @@ nav span             { margin: 0px 10px 0px 10px; }
 #ErrorMsgs           { color: #f61; font-size: smaler }
 
 a {
-  color: #00B7FF;
+  color: #0044AA;
+}
+
+table {
+	text-align: center;
+	font-size:11px;
+	color:#333333;
+	border-width: 1px;
+	border-color: #999999;
+	border-collapse: collapse;
+}
+th {
+	background-color:#c3dde0;
+	border-width: 1px;
+	padding: 8px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+table.htable tr { background-color:#d4e3e5; }
+table.qtable tr { background-color:#e4d3d5; }
+table.stable tr { background-color:#d4d3e5; }
+
+table td {
+	border-width: 1px;
+	padding: 6px;
+	border-style: solid;
+	border-color: #a9c6c9;
+}
+
+table.qtable td {
+	font-size:12px;
+	border-color: #c9a6a9;
+    text-align: left;
+}
+table.stable td {
+	font-size:12px;
+	border-color: #a9a6c9;
+    text-align: left;
 }
