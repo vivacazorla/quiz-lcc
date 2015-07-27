@@ -82,4 +82,12 @@ sequelize.sync().then(function() {
         .then(function(){console.log('Base de datos de preguntas inicializada')});
 	  };
 	});
+  Attempt.count().then(function (count){
+    if (count < 1) {  // la tabla se inicializa si está vacía
+        Attempt.create({ aciertos: 0,
+                         fallos: 0
+        });
+        .then(function(){console.log('Base de datos de intentos inicializada')});
+    };
+  });
 });

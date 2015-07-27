@@ -113,9 +113,7 @@ exports.answer = function(req, res) {
    var resultado = 'Incorrecto';
    var correcto = (req.query.respuesta === req.quiz.respuesta);
 
-   if (correcto){ resultado = 'Correcto'; }
-
-   var maspuntos = (correcto)?5:-2;
+   if (correcto){ resultado = 'Correcto'; };
 
    models.Attempt.find({where: {QuizId : req.quiz.id,
                                 UserId : req.session.user?req.session.user.id:null }}).then(function(attempt) {
@@ -131,7 +129,6 @@ exports.answer = function(req, res) {
        res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: []});
       });
     } else {;
-       if (correcto) { maspuntos=(attempt.aciertos)?0:5; };
        (correcto)?++attempt.aciertos:++attempt.fallos; 
        attempt
        .save()
