@@ -15,6 +15,19 @@ exports.autenticar = function(login, password, callback) {
    });
 };
 
+exports.checkSession = function(req,res,next){
+  if (req.session.user) {
+    var d1 = new Date().getTime();
+    //console.log(req.session.timer);
+    if ( d1 - req.session.timer > 120000 ) { 
+      delete req.session.timer;
+      res.redirect('/logout');
+    } else { 
+      req.session.timer = d1;
+    }
+  };
+};
+
 // GET /users/new
 exports.new = function(req, res) {
   var user = models.User.build( //crea Objeto User
