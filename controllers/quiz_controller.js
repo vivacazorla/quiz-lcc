@@ -52,7 +52,7 @@ exports.create = function(req, res) {
       { pregunta: req.body.quiz.pregunta,
         respuesta: req.body.quiz.respuesta,
         tema: req.body.quiz.tema,
-        UserId: (req.session.user)?req.session.user.id:0 });
+        UserId: req.session.user?req.session.user.id:0 });
 
   quiz.validate().then(function(err){
       if (err) {
