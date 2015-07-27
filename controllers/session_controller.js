@@ -27,7 +27,7 @@ exports.create = function(req, res) {
        return;
     } 
 
-    req.session.timer = new Date().now();
+    req.session.timer = new Date().getTime();
     req.session.user = {id:user.id, username:user.username};
     res.redirect(req.session.redir.toString());
   });
