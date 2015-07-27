@@ -119,8 +119,8 @@ exports.answer = function(req, res) {
                                 UserId : req.session.user?req.session.user.id:null }}).then(function(attempt) {
     if (!attempt){
       var attempt = models.Attempt.build( 
-        { aciertos: (correcto),
-          fallos:  !(correcto),
+        { aciertos: (correcto)?1:0,
+          fallos:   (correcto)?0:1,
           QuizId:  req.quiz.id,
           UserId:  req.session.user?req.session.user.id:null });
       attempt
