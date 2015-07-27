@@ -32,8 +32,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Helpers dinámicos
 app.use(function(req, res, next) {
-  if (req.session.timer) {
-    var d1 = new Date().now();
+  if (req.session.user) {
+    var d1 = new Date().getTime();
     //console.log(req.session.timer);
     if ( d1 - req.session.timer > 120000 ) { 
       delete req.session.timer;
