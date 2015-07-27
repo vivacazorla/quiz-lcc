@@ -32,11 +32,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // Helpers dinámicos
 app.use(function(req, res, next) {
-  if (!req.path.match(/\/login|\/logout/)) {
-    req.session.redir = req.path;
-  }
-  res.locals.session = req.session;
-  // control del tiempo sin refrescar página
   if (req.session.timer) {
     var d1 = new Date().getTime();
     //console.log(req.session.timer);
@@ -47,6 +42,11 @@ app.use(function(req, res, next) {
       req.session.timer = d1;
     }
   };
+  if (!req.path.match(/\/login|\/logout/)) {
+    req.session.redir = req.path;
+  }
+  res.locals.session = req.session;
+  // control del tiempo sin refrescar página
   next();
 });
 
