@@ -56,5 +56,5 @@ exports.statistics = function(req, res) {
                   { model: models.Attempt }]}).then(function(users) {
      res.render('users/statistics.ejs', { users: users, errors: []});
    }
-  ).catch(function(error){next(error);});
+  );
 };

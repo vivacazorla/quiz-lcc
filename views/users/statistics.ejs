@@ -9,7 +9,7 @@
 <% var nComen=0, nQuizes=0, nAttem=0, nQacer=0; nAciertos=0, nFallos=0; var i,j;
    for (i=0; i < users.length; i++ ) { 
       nComen = users[i].Comments?users[i].Comments.length:0;
-      nQuizes = users[i].Quizes?users[i].Quizes.length:0;
+      nQuizes = users[i].Quizzes?users[i].Quizzes.length:0;
       nAttem = users[i].Attempts?users[i].Attempts.length:0;
       nAciertos=0; nFallos=0; nQacer=0;
       for (j=0; j < users[i].Attempts.length; j++ ) {
