@@ -52,7 +52,7 @@ exports.create = function(req, res) {
       { pregunta: req.body.quiz.pregunta,
         respuesta: req.body.quiz.respuesta,
         tema: req.body.quiz.tema,
-        UserId: req.session.user.id });
+        UserId: (req.session.user)?req.session.user.id:0 });
 
   quiz.validate().then(function(err){
       if (err) {
@@ -61,11 +61,6 @@ exports.create = function(req, res) {
        quiz  // guarda en BD los campos pregunta, tema y respuesta de Quiz
        .save()
        .then(function(){res.redirect('/quizes')});
-       sumapuntos(quiz.UserId, 10, function(error, user) {
-            if (error) {
-                req.session.errors = [{"message": 'Se ha producido un error: '+error}];
-                return;
-            }});
       }
     });
 };
@@ -113,16 +108,14 @@ exports.answer = function(req, res) {
    var resultado = 'Incorrecto';
    var correcto = (req.query.respuesta === req.quiz.respuesta);
 
-   if (correcto){ resultado = 'Correcto'; }
-
-   var maspuntos = (correcto)?5:-2;
+   if (correcto){ resultado = 'Correcto'; };
 
    models.Attempt.find({where: {QuizId : req.quiz.id,
                                 UserId : req.session.user?req.session.user.id:null }}).then(function(attempt) {
     if (!attempt){
       var attempt = models.Attempt.build( 
-        { aciertos: (correcto),
-          fallos:  !(correcto),
+        { aciertos: (correcto)?1:0,
+          fallos:   (correcto)?0:1,
           QuizId:  req.quiz.id,
           UserId:  req.session.user?req.session.user.id:null });
       attempt
@@ -131,7 +124,6 @@ exports.answer = function(req, res) {
        res.render('quizes/answer', { quiz: req.quiz, respuesta: resultado, errors: []});
       });
     } else {;
-       if (correcto) { maspuntos=(attempt.aciertos)?0:5; };
        (correcto)?++attempt.aciertos:++attempt.fallos; 
        attempt
        .save()
