@@ -57,7 +57,7 @@ exports.Attempt = Attempt;  // exportar definicion de tabla Attempt
 sequelize.sync().then(function() {
 	// then(..) ejecuta el manejador una vez creada la tabla
 	 User.count().then(function (count){
-    if (count < 3) {  // la tabla se inicializa si está vacía
+    if (count < 2) {  // la tabla se inicializa si está vacía
         User.create({ username: 'admin',
                       password: '1111',
                       score: 100
@@ -82,12 +82,4 @@ sequelize.sync().then(function() {
         .then(function(){console.log('Base de datos de preguntas inicializada')});
 	  };
 	});
-  Attempt.count().then(function (count){
-    if (count < 1) {  // la tabla se inicializa si está vacía
-        Attempt.create({ aciertos: 0,
-                         fallos: 0
-        })
-        .then(function(){console.log('Base de datos de intentos inicializada')});
-    };
-  });
 });
