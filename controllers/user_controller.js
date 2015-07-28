@@ -45,9 +45,9 @@ exports.create = function(req, res) {
        res.render('users/new', { user: usernew, errors: err.errors});   
       } else {
        models.User.find({where:["username = ?", usernew.username]}).then(function(user) {
-          if (user){ 
+          if (user.id){ 
           	 var err = new Error('Nombre de usuario ya existente. Elija otro');
-             res.render('users/new', { user: user, errors: [err]  });  
+             res.render('users/create', { user: user, errors: [err]  });  
           } else {
            usernew.score = 100;
            usernew  // guarda en BD los campos de User
