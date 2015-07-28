@@ -48,18 +48,20 @@ exports.create = function(req, res) {
           if (user.id){ 
              console.log("---- id existente:"+user.id);
           	 var err = new Error('Nombre de usuario ya existente. Elija otro');
-             //res.render('users/new', { user: user, errors: [err]  });  
+             res.render('users/new', { user: user, errors: [err]  } );  
           } else {
            usernew.score = 100;
            usernew  // guarda en BD los campos de User
            .save({fields: ["username","password","score"]})
            .then(function(){res.redirect('/quizes')})
-          }}).catch(function(error){next(error);});;
+          }});
       }
     });
-  req.session.timer = new Date().getTime();
-  req.session.user = {id:usernew.id, username:usernew.username};
-  res.redirect('/quizes');
+  if (usernew.id) {
+    req.session.timer = new Date().getTime();
+    req.session.user = {id:usernew.id, username:usernew.username};
+    res.redirect('/quizes');
+  };
 };
 
 // GET /users/statistics
